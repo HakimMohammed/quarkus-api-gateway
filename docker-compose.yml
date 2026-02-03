@@ -1,0 +1,61 @@
+services:
+
+  postgres-clients:
+    image: postgres:16-alpine
+    container_name: postgres-clients
+    environment:
+      POSTGRES_DB: clients_db
+      POSTGRES_USER: clients_user
+      POSTGRES_PASSWORD: clients_pass
+    volumes:
+      - clients_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+
+  clients-service:
+    image: quarkus/customer-service:latest
+    container_name: clients-service
+    build:
+      context: ./customer-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8082:8080"
+    environment:
+      - DB_URL=jdbc:postgresql://postgres-clients:5432/clients_db
+      - DB_USER=clients_user
+      - DB_PASSWORD=clients_pass
+    depends_on:
+      - postgres-clients
+
+  postgres-products:
+    image: postgres:16-alpine
+    container_name: postgres-products
+    environment:
+      POSTGRES_DB: products_db
+      POSTGRES_USER: products_user
+      POSTGRES_PASSWORD: products_pass
+    volumes:
+      - products_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    restart: unless-stopped
+
+  products-service:
+    image: quarkus/product-service:latest
+    container_name: products-service
+    build:
+      context: ./product-service
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8081:8080"
+    environment:
+      - DB_URL=jdbc:postgresql://postgres-products:5432/products_db
+      - DB_USER=products_user
+      - DB_PASSWORD=products_pass
+    depends_on:
+      - postgres-products
+
+volumes:
+  clients_data:
+  products_data:
