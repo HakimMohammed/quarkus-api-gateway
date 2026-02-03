@@ -3,16 +3,21 @@ package com.example;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProductResourceTest {
 
     @Test
+    @Order(1)
     void testListProducts() {
         given().when().get("product")
                 .then()
@@ -42,7 +47,7 @@ class ProductResourceTest {
                 .when().post("product")
                 .then()
                 .statusCode(201)
-                .body("name", is("New Product"));
+                .body("name", is("Nouveau Produit"));
     }
 
     @Test
@@ -67,7 +72,7 @@ class ProductResourceTest {
     }
 
     @Test
-    @Transactional
+    @Order(2)
     void testDeleteProduct() {
         given()
                 .when().delete("product/3")
