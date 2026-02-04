@@ -144,11 +144,9 @@ services:
   swagger-ui:
     image: swaggerapi/swagger-ui
     container_name: swagger-ui
-    ports:
-      - "8083:8080"
     environment:
       URLS: "[ 
-        { url: 'http://localhost:8000/clients/docs', name: 'Clients Service' },
-        { url: 'http://localhost:8000/products/docs', name: 'Products Service' }  ]"
+        { url: 'http://localhost:8000/api/clients/openapi', name: 'Clients Service' },
+        { url: 'http://localhost:8000/api/products/openapi', name: 'Products Service' }  ]"
     networks:
       - kong-net
