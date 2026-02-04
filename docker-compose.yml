@@ -150,3 +150,25 @@ services:
         { url: 'http://localhost:8000/api/products/openapi', name: 'Products Service' }  ]"
     networks:
       - kong-net
+  
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - kong-net
+      - services-net
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - kong-net
+      - services-net
+    restart: unless-stopped
