@@ -18,7 +18,7 @@ class ClientResourceTest {
     @Test
     @Order(1)
     void testListClients() {
-        given().when().get("/client")
+        given().when().get("")
                 .then()
                 .statusCode(200)
                 .body("$.size()", greaterThanOrEqualTo(3));
@@ -27,7 +27,7 @@ class ClientResourceTest {
     @Test
     void testGetClient() {
         given()
-                .when().get("/client/1")
+                .when().get("/1")
                 .then()
                 .statusCode(200)
                 .body("name", is("Client A"));
@@ -43,7 +43,7 @@ class ClientResourceTest {
         given()
                 .contentType(ContentType.JSON)
                 .body(client)
-                .when().post("/client")
+                .when().post("")
                 .then()
                 .statusCode(201)
                 .body("name", is("New Client"));
@@ -59,12 +59,12 @@ class ClientResourceTest {
         given()
                 .contentType(ContentType.JSON)
                 .body(client)
-                .when().put("/client/2")
+                .when().put("/2")
                 .then()
                 .statusCode(204);
 
         given()
-                .when().get("/client/2")
+                .when().get("/2")
                 .then()
                 .statusCode(200)
                 .body("name", is("Updated Client B"));
@@ -74,12 +74,12 @@ class ClientResourceTest {
     @Order(2)
     void testDeleteClient() {
         given()
-                .when().delete("/client/3")
+                .when().delete("/3")
                 .then()
                 .statusCode(204);
 
         given()
-                .when().get("/client/3")
+                .when().get("/3")
                 .then()
                 .statusCode(404);
     }

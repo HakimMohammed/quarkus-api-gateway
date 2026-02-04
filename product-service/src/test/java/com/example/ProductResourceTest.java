@@ -2,7 +2,6 @@ package com.example;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,7 @@ class ProductResourceTest {
     @Test
     @Order(1)
     void testListProducts() {
-        given().when().get("product")
+        given().when().get("")
                 .then()
                 .statusCode(200)
                 .body("$.size()", greaterThanOrEqualTo(3));
@@ -28,7 +27,7 @@ class ProductResourceTest {
     @Test
     void testGetProduct() {
         given()
-                .when().get("product/1")
+                .when().get("/1")
                 .then()
                 .statusCode(200)
                 .body("name", is("Produit A"));
@@ -44,7 +43,7 @@ class ProductResourceTest {
         given()
                 .contentType(ContentType.JSON)
                 .body(product)
-                .when().post("product")
+                .when().post("")
                 .then()
                 .statusCode(201)
                 .body("name", is("Nouveau Produit"));
@@ -60,12 +59,12 @@ class ProductResourceTest {
         given()
                 .contentType(ContentType.JSON)
                 .body(product)
-                .when().put("product/2")
+                .when().put("/2")
                 .then()
                 .statusCode(204);
 
         given()
-                .when().get("product/2")
+                .when().get("/2")
                 .then()
                 .statusCode(200)
                 .body("name", is("Produit Modifié"));
@@ -75,12 +74,12 @@ class ProductResourceTest {
     @Order(2)
     void testDeleteProduct() {
         given()
-                .when().delete("product/3")
+                .when().delete("/3")
                 .then()
                 .statusCode(204);
 
         given()
-                .when().get("product/3")
+                .when().get("/3")
                 .then()
                 .statusCode(404);
     }
